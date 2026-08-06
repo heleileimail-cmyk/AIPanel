@@ -1,0 +1,8 @@
+dist/
+node_modules/
+release/
+release-builder/
+test-results/
+build/embedded.provisionprofile
+.DS_Store
+*.log

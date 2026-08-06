@@ -1,0 +1,19 @@
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  base: "./",
+  plugins: [react()],
+  server: {
+    host: "127.0.0.1",
+    port: 5173
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    exclude: ["node_modules/**", "dist/**", "tests/smoke.spec.ts"]
+  },
+  build: {
+    outDir: "dist/renderer"
+  }
+});

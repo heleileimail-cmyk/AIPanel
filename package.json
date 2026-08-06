@@ -1,0 +1,109 @@
+{
+  "name": "multi-ai-split-browser",
+  "productName": "AIPanel",
+  "version": "0.1.0",
+  "description": "A multi-AI split browser workspace for macOS.",
+  "author": "AIPanel",
+  "private": true,
+  "type": "module",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && npm run dev:electron\"",
+    "dev:renderer": "vite --host 127.0.0.1",
+    "dev:electron": "tsc -p tsconfig.node.json && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build",
+    "package:mac:legacy": "npm run build && electron-packager . AIPanel --platform=darwin --arch=arm64 --out=release --overwrite --prune=true --app-bundle-id=com.aipanel.desktop --ignore='^/(src|tests|test-results|release)(/|$)' --ignore='^/(playwright.config.ts|tsconfig.json|tsconfig.node.json|vite.config.ts)$'",
+    "package:mac": "npm run build && electron-builder --mac dmg --arm64",
+    "package:mac:x64": "npm run build && electron-builder --mac dmg --x64",
+    "package:mac:universal": "npm run build && electron-builder --mac dmg --universal",
+    "package:mas": "npm run build && electron-builder --mac mas --arm64",
+    "package:mas:unsigned": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac mas --arm64",
+    "package:win": "npm run build && electron-builder --win nsis --x64",
+    "package:win:portable": "npm run build && electron-builder --win portable --x64",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "playwright test",
+    "lint": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.0.0",
+    "@playwright/test": "^1.49.0",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^42.3.0",
+    "electron-builder": "^26.8.1",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.0",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.aipanel.desktop",
+    "productName": "AIPanel",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release-builder",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "index.html",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "mas": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "mas"
+      ],
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "verifyUpdateCodeSignature": false,
+      "signAndEditExecutable": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "dmg": {
+      "sign": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "AIPanel",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
