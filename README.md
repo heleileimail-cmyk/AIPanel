@@ -1,6 +1,6 @@
 # AIPanel
 
-AIPanel 是一个面向 macOS 的多 AI 分屏桌面应用。它把多个 AI 网页放在同一窗口中，让你输入一次消息，再发送到一个或多个已选面板。
+AIPanel 是一个支持 macOS 和 Windows 的多 AI 分屏桌面应用。它把多个 AI 网页放在同一窗口中，让你输入一次消息，再发送到一个或多个已选面板。
 
 ## 功能
 
@@ -13,12 +13,15 @@ AIPanel 是一个面向 macOS 的多 AI 分屏桌面应用。它把多个 AI 网
 
 ## 安装
 
-在仓库的 Releases 页面下载适合 Mac 的 DMG：
+在仓库的 Releases 页面下载适合电脑的安装包：
 
 - `mac-arm64`：Apple Silicon（M1/M2/M3/M4 等）
 - `mac-x64`：Intel Mac
+- `win-x64.exe`：64 位 Windows 电脑
 
 当前安装包未使用 Apple Developer 证书签名。首次启动若被 macOS 阻止，请在“系统设置 → 隐私与安全性”中确认打开，或在 Finder 中右键应用并选择“打开”。
+
+Windows 安装包目前也未使用代码签名证书。若 SmartScreen 显示保护提示，请确认文件来自本仓库的 Releases 页面后，选择“更多信息”再继续运行。
 
 ## 本地开发
 
