@@ -15,6 +15,7 @@ export function App() {
   const [settings, setSettings] = useState<AppSettings>(() => createDefaultSettings());
   const [selectedTargetIds, setSelectedTargetIds] = useState<string[]>(settings.selectedTargetIds);
   const [message, setMessage] = useState("");
+  const [lastSentMessage, setLastSentMessage] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [sendResults, setSendResults] = useState<SendResult[]>([]);
 
@@ -56,13 +57,17 @@ export function App() {
   }
 
   async function sendMessage() {
+    const sentMessage = message;
+    setMessage("");
+    setLastSentMessage(sentMessage);
+
     const controllers = new Map<string, PaneController>();
     for (const [slotId, ref] of paneRefs) {
       if (ref.current) controllers.set(slotId, ref.current);
     }
 
     const results = await sendToTargets({
-      message,
+      message: sentMessage,
       targetIds: selectedTargetIds,
       controllers
     });
@@ -97,7 +102,11 @@ export function App() {
             </span>
           ))}
           {sendResults.some((result) => !result.ok) && (
-            <button type="button" className="copy-fallback-button" onClick={() => void writeClipboardText(message)}>
+            <button
+              type="button"
+              className="copy-fallback-button"
+              onClick={() => void writeClipboardText(lastSentMessage)}
+            >
               复制本轮消息
             </button>
           )}

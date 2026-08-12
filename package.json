@@ -1,7 +1,7 @@
 {
   "name": "multi-ai-split-browser",
   "productName": "AIPanel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A multi-AI split browser workspace for macOS.",
   "author": "AIPanel",
   "private": true,

@@ -80,7 +80,7 @@ export function buildGenericSendScript(message: string): string {
 
         if (!insertedWithEditor || readInputText(element).trim() !== message.trim()) {
           element.textContent = message;
-          emitInputEvents(element, "insertText", message);
+          emitInputEvents(element, "insertReplacementText", null);
         }
         element.dispatchEvent(new Event("change", { bubbles: true }));
       };
