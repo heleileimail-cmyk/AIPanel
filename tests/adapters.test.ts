@@ -131,6 +131,35 @@ describe("send adapters", () => {
     expect(clicks).toEqual(["send"]);
   });
 
+  it("does not append the message twice when a rich editor handles insertText itself", async () => {
+    document.body.innerHTML = `
+      <section class="composer">
+        <div role="textbox" contenteditable="true"></div>
+        <button type="button">发送消息</button>
+      </section>
+    `;
+    const textbox = document.querySelector('[role="textbox"]') as HTMLElement;
+    const sendButton = document.querySelector("button") as HTMLButtonElement;
+    let sentMessage = "";
+    sendButton.addEventListener("click", () => {
+      sentMessage = textbox.textContent ?? "";
+    });
+    textbox.addEventListener("input", (event) => {
+      const inputEvent = event as InputEvent;
+      if (inputEvent.inputType === "insertText" && inputEvent.data) {
+        textbox.textContent = `${textbox.textContent ?? ""}${inputEvent.data}`;
+      }
+    });
+    const originalExecCommand = document.execCommand;
+    document.execCommand = (() => false) as typeof document.execCommand;
+
+    const result = (await eval(buildGenericSendScript("你好"))) as { ok: boolean; status: string };
+
+    document.execCommand = originalExecCommand;
+    expect(result).toEqual({ ok: true, status: "sent" });
+    expect(sentMessage).toBe("你好");
+  });
+
   it("uses preset adapters for built-in slots", () => {
     const slot: AiSlot = {
       id: "slot-1",

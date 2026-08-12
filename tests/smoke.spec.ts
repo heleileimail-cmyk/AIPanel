@@ -80,6 +80,8 @@ test("renderer shell shows command bar and default AI slots", async ({ page }) =
   await messageInput.fill("测试按钮 hover");
   await sendButton.hover();
   await expect(sendButton).toHaveCSS("background-color", "rgb(37, 99, 235)");
+  await sendButton.click();
+  await expect(messageInput).toHaveValue("");
 
   await page.getByRole("button", { name: "设置" }).click();
   await page.getByRole("button", { name: "添加自定义AI" }).click();
